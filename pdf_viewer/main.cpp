@@ -357,6 +357,25 @@ void add_paths_to_file_system_watcher(QFileSystemWatcher& watcher, const Path& d
     }
 }
 
+class MyApplication : public QApplication
+{
+public:
+    MyApplication(int &argc, char **argv)
+        : QApplication(argc, argv)
+    {
+    }
+
+    bool event(QEvent *event) override
+    {
+        if (event->type() == QEvent::FileOpen) {
+            QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
+            qDebug() << "Open file" << openEvent->file();
+        }
+
+        return QApplication::event(event);
+    }
+};
+
 int main(int argc, char* args[]) {
 
 	QSurfaceFormat format;

@@ -92,5 +92,6 @@ mac {
     CONFIG+=sdk_no_version_check
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.15
     ICON = pdf_viewer\icon2.ico
+    QMAKE_INFO_PLIST = resources/Info.plist
 }
 
