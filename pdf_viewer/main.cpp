@@ -359,6 +359,7 @@ void add_paths_to_file_system_watcher(QFileSystemWatcher& watcher, const Path& d
 
 class OpenWithApplication : public QApplication
 {
+	Q_OBJECT
 public:
 	QString file_name;
     OpenWithApplication(int &argc, char **argv)
