@@ -357,19 +357,24 @@ void add_paths_to_file_system_watcher(QFileSystemWatcher& watcher, const Path& d
     }
 }
 
-class MyApplication : public QApplication
+class OpenWithApplication : public QApplication
 {
 public:
-    MyApplication(int &argc, char **argv)
+	QString file_name;
+    OpenWithApplication(int &argc, char **argv)
         : QApplication(argc, argv)
     {
     }
+signals:
+    void fileReady(QString fn);
 
+protected:
     bool event(QEvent *event) override
     {
         if (event->type() == QEvent::FileOpen) {
             QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
-            qDebug() << "Open file" << openEvent->file();
+            file_name = openEvent->file();
+			emit fileReady(fileName); //  the file is ready
         }
 
         return QApplication::event(event);
@@ -384,7 +389,7 @@ int main(int argc, char* args[]) {
 	QSurfaceFormat::setDefaultFormat(format);
 
 	QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
-	QApplication app(argc, args);
+	OpenWithApplication app(argc, args);
 
     QCommandLineParser* parser = get_command_line_parser();
     parser->process(app.arguments());
@@ -506,6 +511,10 @@ int main(int argc, char* args[]) {
 	main_widget.show();
 
 	main_widget.handle_args(app.arguments());
+
+	QObject::connect(&app, &OpenWithApplication::fileReady, [&main_widget](QString fileName) {
+		main_widget.open_document(fileName.toStdWString());
+	});
 
     // live reload the config files
 	QObject::connect(&pref_file_watcher, &QFileSystemWatcher::fileChanged, [&]() {
