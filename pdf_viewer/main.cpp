@@ -374,7 +374,7 @@ protected:
         if (event->type() == QEvent::FileOpen) {
             QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
             file_name = openEvent->file();
-			emit fileReady(fileName); //  the file is ready
+			emit fileReady(file_name); //  the file is ready
         }
 
         return QApplication::event(event);
