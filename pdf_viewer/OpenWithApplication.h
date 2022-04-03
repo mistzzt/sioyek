@@ -1,7 +1,8 @@
 #ifndef OPEN_WITH_APP_H
 #define OPEN_WITH_APP_H
 
-#include <qapplication.h>
+#include <QApplication>
+#include <QFileOpenEvent>
 
 class OpenWithApplication : public QApplication
 {

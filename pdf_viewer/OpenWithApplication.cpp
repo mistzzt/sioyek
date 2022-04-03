@@ -1,5 +1,4 @@
 #include <OpenWithApplication.h>
-#include <qapplication.h>
 
 bool OpenWithApplication::event(QEvent *event) {
 	if (event->type() == QEvent::FileOpen) {
