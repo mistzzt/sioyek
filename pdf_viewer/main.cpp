@@ -74,6 +74,7 @@
 #include "path.h"
 #include "RunGuard.h"
 #include "checksum.h"
+#include "OpenWithApplication.h"
 
 #define FTS_FUZZY_MATCH_IMPLEMENTATION
 #include "fts_fuzzy_match.h"
@@ -357,30 +358,16 @@ void add_paths_to_file_system_watcher(QFileSystemWatcher& watcher, const Path& d
     }
 }
 
-class OpenWithApplication : public QApplication
+bool OpenWithApplication::event(QEvent *event)
 {
-	Q_OBJECT
-public:
-	QString file_name;
-    OpenWithApplication(int &argc, char **argv)
-        : QApplication(argc, argv)
-    {
-    }
-signals:
-    void fileReady(QString fn);
+	if (event->type() == QEvent::FileOpen) {
+		QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
+		file_name = openEvent->file();
+		emit fileReady(file_name); //  the file is ready
+	}
 
-protected:
-    bool event(QEvent *event) override
-    {
-        if (event->type() == QEvent::FileOpen) {
-            QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
-            file_name = openEvent->file();
-			emit fileReady(file_name); //  the file is ready
-        }
-
-        return QApplication::event(event);
-    }
-};
+	return QApplication::event(event);
+}
 
 int main(int argc, char* args[]) {
 
