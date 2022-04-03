@@ -502,6 +502,7 @@ int main(int argc, char* args[]) {
 
 	QObject::connect(&app, &OpenWithApplication::fileReady, [&main_widget](QString fileName) {
 		main_widget.open_document(fileName.toStdWString());
+		main_widget.invalidate_render();
 	});
 
     // live reload the config files
