@@ -492,7 +492,7 @@ int main(int argc, char* args[]) {
 	// load input file from `QFileOpenEvent` for macOS drag and drop & "open with"
 	QObject::connect(&app, &OpenWithApplication::file_ready, [&main_widget](const QString& file_name) {
 		main_widget.open_document(file_name.toStdWString());
-		main_widget.validate_render();
+		main_widget.invalidate_render();
 	});
 
     // live reload the config files
